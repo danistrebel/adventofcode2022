@@ -53,9 +53,9 @@ object day02 extends App {
     }
   }
 
-  private val totalScore = Source.fromURI(getClass.getResource("day2.txt").toURI).getLines().map(l => play(l.charAt(0), l.charAt(2))).sum
+  private val totalScore = Source.fromURI(getClass.getResource("day02.txt").toURI).getLines().map(l => play(l.charAt(0), l.charAt(2))).sum
   println(s"Day2 Part1: ${totalScore}")
 
-  private val totalScoreOutcomePlay = Source.fromURI(getClass.getResource("day2.txt").toURI).getLines().map(l => outcomePlay(l.charAt(0), l.charAt(2))).sum
+  private val totalScoreOutcomePlay = Source.fromURI(getClass.getResource("day02.txt").toURI).getLines().map(l => outcomePlay(l.charAt(0), l.charAt(2))).sum
   println(s"Day2 Part2: ${totalScoreOutcomePlay}")
 }

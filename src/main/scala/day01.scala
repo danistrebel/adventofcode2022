@@ -8,7 +8,7 @@ object day01 extends App {
   private val elves = new ListBuffer[List[String]]
 
   private val elfCalories = new ListBuffer[String]
-  for (l <- Source.fromURI(getClass.getResource("day1.txt").toURI).getLines()) {
+  for (l <- Source.fromURI(getClass.getResource("day01.txt").toURI).getLines()) {
     if (l.equals("")) {
       elves.append(elfCalories.toList)
       elfCalories.clear()
