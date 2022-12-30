@@ -10,8 +10,8 @@ object day09 extends App {
   })
 
 
-  def simulateMotion(motion: Motion, headPosition: (Int, Int), tailPosition: (Int, Int)): ((Int, Int), (Int, Int)) = {
-
+  def simulateMotion(motion: Motion, snake: List[(Int, Int)]): List[(Int, Int)] = {
+    val headPosition = snake(0)
     val nextHeadPosition = motion.direction match {
       case 'R' => (headPosition._1+1, headPosition._2)
       case 'L' => (headPosition._1-1, headPosition._2)
@@ -20,36 +20,52 @@ object day09 extends App {
       case _ => throw new Exception(s"Unknown direction: ${motion.direction}")
     }
 
-    if (Math.abs(nextHeadPosition._1-tailPosition._1) <= 1 && Math.abs(nextHeadPosition._2-tailPosition._2) <= 1) {
-      // No tail Movment Needed
-      (nextHeadPosition, tailPosition)
-    } else {
-      val dX = nextHeadPosition._1 - tailPosition._1
-      val dY = nextHeadPosition._2 - tailPosition._2
+    var newSnake = nextHeadPosition::snake.tail
 
-      if (dX == 0) { // move vertical
-        (nextHeadPosition, (tailPosition._1, tailPosition._2+(dY/Math.abs(dY))))
-      } else if (dY == 0) { // move horizontal
-        (nextHeadPosition, (tailPosition._1 + (dX/ Math.abs(dX)), tailPosition._2))
+    for (i <- 0 to newSnake.length-2) {
+      if (Math.abs(newSnake(i)._1 - newSnake(i+1)._1) <= 1 && Math.abs(newSnake(i)._2 - newSnake(i+1)._2) <= 1) {
+        // No tail Movement Needed
       } else {
-        (nextHeadPosition, (tailPosition._1 + (dX/ Math.abs(dX)), tailPosition._2+(dY/Math.abs(dY))))
+        val dX = newSnake(i)._1 - newSnake(i+1)._1
+        val dY = newSnake(i)._2 - newSnake(i+1)._2
+
+        if (dX == 0) { // move vertical
+          newSnake = newSnake.take(i+1):::(newSnake(i+1)._1, newSnake(i+1)._2 + (dY / Math.abs(dY))) :: snake.drop(i+2)
+        } else if (dY == 0) { // move horizontal
+          newSnake = newSnake.take(i+1):::(newSnake(i+1)._1 + (dX / Math.abs(dX)), newSnake(i+1)._2) :: snake.drop(i+2)
+        } else {
+          newSnake = newSnake.take(i+1):::(newSnake(i+1)._1 + (dX / Math.abs(dX)), newSnake(i+1)._2 + (dY / Math.abs(dY))) :: snake.drop(i+2)
+        }
       }
     }
+    newSnake
   }
 
-  var headPosition = (0, 0) //x,y
-  var tailPosition = (0, 0) //x,y
+  var snake2 = (0 to 1).toList.map(_ => (0,0))
 
-  private val tailSteps = mutable.HashSet[(Int, Int)]()
+  private val tailSteps2 = mutable.HashSet[(Int, Int)]()
 
   for (motion <- headMotions) {
     for (_ <- 1 to motion.distance) {
-      val (nextHead, nextTail) = simulateMotion(motion, headPosition, tailPosition)
-      headPosition = nextHead
-      tailPosition = nextTail
-      tailSteps.add(tailPosition)
+      val newSnake = simulateMotion(motion, snake2)
+      snake2 = newSnake
+      tailSteps2.add(snake2(snake2.length-1))
     }
   }
 
-  println(tailSteps.size)
+  println(s"Day9 Part 1: ${tailSteps2.size}")
+
+  var snake10 = (0 to 9).toList.map(_ => (0, 0))
+
+  private val tailSteps10 = mutable.HashSet[(Int, Int)]()
+
+  for (motion <- headMotions) {
+    for (_ <- 1 to motion.distance) {
+      val newSnake = simulateMotion(motion, snake10)
+      snake10 = newSnake
+      tailSteps10.add(snake10(snake10.length - 1))
+    }
+  }
+
+  println(s"Day9 Part 2: ${tailSteps10.size}")
 }
