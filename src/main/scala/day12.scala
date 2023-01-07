@@ -1,7 +1,5 @@
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 import scala.io.Source
-import scala.util.control.Breaks.break
 
 object day12 extends App{
 
